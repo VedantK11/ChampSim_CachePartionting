@@ -7,6 +7,12 @@
 
 #include<iterator>
 
+#undef STATIC_SET_PARTIONING_ACTIVE
+#undef DYNAMIC_SET_PARTIONING_ACTIVE
+
+// #define STATIC_SET_PARTIONING_ACTIVE 1
+// #define DYNAMIC_SET_PARTIONING_ACTIVE 1
+
 // uint64_t llc_self_evictions = 0;
 
 uint64_t l2pf_access = 0;
@@ -1494,6 +1500,7 @@ if((cache_type == IS_L1I || cache_type == IS_L1D) && reads_ready.size() == 0)
             int index = RQ.head;
 
            //@vedant: Monitoring code
+           #ifdef DYNAMIC_SET_PARTIONING_ACTIVE
             if (cache_type==IS_LLC)
             {
                 // cout<<"LLC accesses: "<<llc_accesses<<endl;
@@ -1568,7 +1575,8 @@ if((cache_type == IS_L1I || cache_type == IS_L1D) && reads_ready.size() == 0)
                 }
                 
             }
-
+            #endif
+            
             // access cache
             if(cache_type == IS_LLC)
             cpu = read_cpu;
@@ -2991,9 +2999,13 @@ if((cache_type == IS_L1I || cache_type == IS_L1D) && reads_ready.size() == 0)
 #endif
             if(NAME=="LLC"){
                 uint32_t set = (uint32_t) (address & ((1 << lg2(NUM_SET)) - 1));
-                // return set;
-                // return get_sp_hashed_set(set);
-                return get_dp_hashed_set(set);
+                #ifdef STATIC_SET_PARTIONING_ACTIVE
+                    return get_sp_hashed_set(set);
+                #elif defined(DYNAMIC_SET_PARTIONING_ACTIVE)
+                    return get_dp_hashed_set(set);
+                #else
+                    return set;
+                #endif
             }
             else{
 

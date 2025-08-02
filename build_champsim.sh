@@ -49,7 +49,7 @@ ITLB_REPLACEMENT='lru'  # prefetcher/*.itlb_repl
 DTLB_REPLACEMENT='lru'  # prefetcher/*.dtlb_repl
 STLB_REPLACEMENT='lru'  # prefetcher/*.stlb_repl
 
-NUM_CORE=2         # tested up to 8-core system
+NUM_CORE=$2         # tested up to 8-core system
 
 ############## Some useful macros ###############
 BOLD=$(tput bold)
